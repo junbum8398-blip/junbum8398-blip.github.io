@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>박준범 포트폴리오</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* layout idea: a portfolio you talk to — glass sidebar of topics, a chat log that answers with rich cards */
+  --bg:#08090B;
+  --glass:#121418D9;
+  --glass-2:#17191F;
+  --line:#2A2D35;
+  --text:#ECEEF2;
+  --muted:#8A8F9A;
+  --amber:#7FD8E8;
+  --mint:#5EE6B8;
+  --violet:#9D8CFF;
+  --rose:#FF7A8A;
+  --body:'Pretendard','Noto Sans KR',system-ui,sans-serif;
+  --mono:'Space Mono',ui-monospace,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{background:var(--bg);color:var(--text);font-family:var(--body);overflow:hidden;-webkit-font-smoothing:antialiased;}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(700px 500px at 80% 0%,#9D8CFF14,transparent 70%),radial-gradient(600px 400px at 0% 100%,#5EE6B80D,transparent 70%);}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:none;}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+a{color:var(--amber);}
+.app{position:relative;height:100%;display:grid;grid-template-columns:260px 1fr;gap:14px;padding:14px;}
+.panel{background:var(--glass);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(14px);}
+
+/* sidebar */
+aside{display:flex;flex-direction:column;overflow:hidden;}
+.me{display:flex;gap:12px;align-items:center;padding:18px;border-bottom:1px solid var(--line);}
+.av{width:46px;height:46px;border-radius:14px;object-fit:cover;border:1px solid #4A4F5C;filter:grayscale(.2);display:grid;place-items:center;font-weight:900;background:linear-gradient(135deg,var(--amber),var(--rose));color:#1A0F05;}
+.me b{display:block;font-size:16px;}
+.me small{color:var(--mint);font-size:12.5px;}
+.lbl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);padding:16px 18px 8px;}
+nav{display:flex;flex-direction:column;gap:4px;padding:0 10px;}
+.nav{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid transparent;font-size:14px;text-align:left;color:#C9D0DE;}
+.nav:hover{background:var(--glass-2);}
+.nav.on{background:var(--glass-2);border-color:#3A4458;color:var(--text);box-shadow:inset 3px 0 0 var(--amber);}
+.nav .ic{width:18px;text-align:center;color:var(--muted);}
+.nav .ct{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 8px;}
+.quick{display:flex;flex-direction:column;gap:8px;padding:0 12px;}
+.chip{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:linear-gradient(90deg,#9D8CFF14,transparent);font-size:13.5px;text-align:left;}
+.chip:hover{border-color:var(--violet);}
+.chip i{width:7px;height:7px;border-radius:50%;background:var(--violet);flex:none;}
+.chip.g{background:linear-gradient(90deg,#5EE6B814,transparent);} .chip.g i{background:var(--mint);} .chip.g:hover{border-color:var(--mint);}
+.chip.a{background:linear-gradient(90deg,#FFB54714,transparent);} .chip.a i{background:var(--amber);} .chip.a:hover{border-color:var(--amber);}
+.foot{margin-top:auto;padding:14px 18px;border-top:1px solid var(--line);display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 4px #5EE6B822;}
+
+/* main */
+main{display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.top{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);}
+.top .t{font-family:var(--mono);font-size:12px;color:var(--muted);}
+.top .sp{flex:1;}
+.pill{font-family:var(--mono);font-size:12px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;color:var(--text);text-decoration:none;}
+.pill:hover{border-color:var(--muted);}
+.menu-btn{display:none;}
+#log{flex:1;overflow-y:auto;padding:24px clamp(16px,4vw,48px) 30px;display:flex;flex-direction:column;gap:22px;scroll-behavior:smooth;}
+.msg{display:flex;gap:12px;align-items:flex-start;max-width:980px;width:100%;margin:0 auto;animation:in .35s ease-out both;}
+@keyframes in{from{opacity:0;transform:translateY(10px);}}
+.msg .bot img{width:100%;height:100%;object-fit:cover;border-radius:10px;}
+.msg .bot{flex:none;width:32px;height:32px;border-radius:10px;overflow:hidden;display:grid;place-items:center;font-size:12px;font-weight:900;background:var(--glass-2);border:1px solid var(--line);color:var(--amber);}
+.msg .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:14px;}
+.msg .say{font-size:15.5px;line-height:1.75;color:#D5DBE7;}
+.msg .say b{color:var(--text);}
+.msg.user{justify-content:flex-end;}
+.msg.user .q{background:var(--glass-2);border:1px solid #3A4458;padding:10px 16px;border-radius:16px 16px 4px 16px;font-size:14.5px;max-width:70%;}
+.typing{display:inline-flex;gap:4px;padding:6px 0;}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:b 1s infinite;}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes b{50%{opacity:.25;transform:translateY(-3px);}}
+
+/* rich cards */
+.card{background:var(--glass-2);border:1px solid var(--line);border-radius:20px;padding:22px;}
+.hero{display:grid;grid-template-columns:minmax(260px,.85fr) 1.15fr;overflow:hidden;padding:0;border-radius:24px;background:linear-gradient(180deg,#1A1C22,#121418);box-shadow:0 30px 60px #0008, inset 0 1px 0 #ffffff10;}
+.hero .art{position:relative;min-height:360px;background:#0E0F13;border-right:1px solid var(--line);overflow:hidden;}
+.hero .me-art::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background-image:radial-gradient(#ffffff22 1px,transparent 1.2px);background-size:7px 7px;-webkit-mask-image:linear-gradient(90deg,transparent 30%,#000 100%);mask-image:linear-gradient(90deg,transparent 30%,#000 100%);}
+.hero .me-art::after{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(circle at 50% 38%,#9D8CFF26,transparent 60%);}
+.hero .me-art img{position:absolute;inset:auto;left:0;right:0;margin:0 auto;bottom:0;height:92%;width:auto;max-width:none;z-index:1;filter:grayscale(1) contrast(1.08) brightness(.95);opacity:.92;transition:filter .5s ease;-webkit-mask-image:linear-gradient(180deg,#000 60%,transparent 97%),linear-gradient(90deg,transparent 0%,#000 16%,#000 84%,transparent 100%);-webkit-mask-composite:source-in;mask-image:linear-gradient(180deg,#000 60%,transparent 97%),linear-gradient(90deg,transparent 0%,#000 16%,#000 84%,transparent 100%);mask-composite:intersect;}
+.hero:hover .me-art img{filter:grayscale(0) contrast(1) brightness(1);}
+.hero .info{padding:32px 30px;display:flex;flex-direction:column;gap:18px;justify-content:center;}
+.hero h1{font-weight:700;line-height:1.02;letter-spacing:-.01em;text-transform:uppercase;}
+.hero h1 .l1{display:block;font-size:clamp(34px,4.4vw,56px);font-weight:400;color:#D9DCE2;}
+.hero h1 .l2{display:block;font-size:clamp(34px,4.4vw,56px);font-weight:800;background:linear-gradient(90deg,#F4F5F7 0%,#BFC6D2 45%,#9ED7E4 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.tag::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:currentColor;margin-right:7px;vertical-align:middle;opacity:.8;}
+.tags{display:flex;flex-wrap:wrap;gap:8px;}
+.tag{font-family:var(--body);font-weight:500;letter-spacing:.04em;font-size:12px;padding:6px 13px;border-radius:999px;border:1px solid #33363F;background:#1B1D23;color:#A99CFF;text-transform:uppercase;}
+.tag.m{color:var(--mint);} .tag.a{color:var(--amber);}
+.desc{font-size:15px;line-height:1.75;color:#C9D0DE;max-width:56ch;}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.stat{border:1px solid #2E3139;border-radius:16px;padding:16px;background:linear-gradient(180deg,#1C1E24,#15171C);box-shadow:inset 0 1px 0 #ffffff0D;}
+.stat .n{font-family:var(--mono);font-weight:700;font-size:28px;font-variant-numeric:tabular-nums;}
+.stat .n.v{color:var(--violet);} .stat .n.m{color:var(--mint);} .stat .n.a{color:var(--amber);}
+.stat .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:8px;line-height:1.5;}
+.kick{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color:var(--muted);}
+.card h3{font-size:22px;font-weight:700;margin:6px 0 10px;}
+.card p,.card li{font-size:14.5px;line-height:1.75;color:#C9D0DE;}
+.card ul{padding-left:18px;display:flex;flex-direction:column;gap:4px;}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;}
+.shot{width:100%;border-radius:14px;border:1px solid var(--line);display:block;cursor:zoom-in;background:#0F1218;}
+.cap{font-size:12.5px;color:var(--muted);margin-top:6px;}
+figure{display:flex;flex-direction:column;}
+/* carousel */
+.car{position:relative;}
+.track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 10px;scrollbar-width:none;}
+.track::-webkit-scrollbar{display:none;}
+.slide{flex:0 0 min(420px,82%);scroll-snap-align:start;}
+.arrows{display:flex;gap:8px;justify-content:flex-end;}
+.arrows button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);}
+.arrows button:hover{border-color:var(--muted);}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+th{text-align:left;font-family:var(--mono);font-size:11.5px;color:var(--muted);padding:10px;border-bottom:1px solid var(--line);}
+td{padding:11px 10px;border-bottom:1px solid #222937;line-height:1.6;vertical-align:top;}
+.mine{color:var(--mint);font-weight:700;white-space:nowrap;}
+.team{color:var(--muted);white-space:nowrap;}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;}
+.step{border:1px solid var(--line);border-radius:14px;padding:14px;background:#0F1218;position:relative;}
+.step b{font-family:var(--mono);font-size:11px;color:var(--amber);}
+.step.h b{color:var(--mint);}
+.step h4{font-size:15px;margin:6px 0 4px;}
+.step p{font-size:13px;line-height:1.6;color:var(--muted);}
+.quest{display:grid;grid-template-columns:70px 1fr;gap:8px 16px;}
+.quest dt{font-family:var(--mono);font-size:12px;color:var(--violet);padding-top:3px;}
+.quest dd{font-size:14.5px;line-height:1.7;color:#C9D0DE;}
+.qtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.qtab{font-size:13px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);color:var(--muted);}
+.qtab.on{border-color:var(--violet);color:var(--text);background:#9D8CFF1A;}
+.pair{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;}
+.pair .shot{aspect-ratio:16/9;object-fit:cover;}
+.pair .ar{font-family:var(--mono);color:var(--amber);}
+.stack{display:flex;flex-wrap:wrap;gap:8px;}
+.stack span{font-family:var(--mono);font-size:12px;padding:6px 12px;border-radius:10px;border:1px solid var(--line);background:#0F1218;}
+.stack span.ai{border-color:#9D8CFF66;color:var(--violet);}
+.follow{display:flex;flex-wrap:wrap;gap:8px;}
+.follow button{font-size:13px;padding:7px 12px;border-radius:999px;border:1px dashed #3A4458;color:var(--muted);}
+.follow button:hover{border-style:solid;color:var(--text);border-color:var(--muted);}
+/* lab */
+.lab{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.evs{display:flex;flex-wrap:wrap;gap:8px;}
+.ev{font-size:13px;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:#0F1218;}
+.ev:hover{border-color:var(--muted);} .ev.bad{color:var(--rose);border-color:#FF7A8A66;}
+.tg{display:flex;align-items:center;gap:10px;font-size:13px;margin:12px 0;}
+.sw{width:46px;height:24px;border-radius:12px;background:var(--mint);position:relative;}
+.sw::after{content:"";position:absolute;top:3px;left:25px;width:18px;height:18px;border-radius:50%;background:#0B0D12;transition:left .15s;}
+.sw.off{background:var(--rose);} .sw.off::after{left:3px;}
+.bars{display:flex;flex-direction:column;gap:6px;}
+.bars .r{display:grid;grid-template-columns:70px 1fr 26px;gap:8px;align-items:center;font-size:12.5px;}
+.bars .t{height:8px;border-radius:4px;background:#0F1218;overflow:hidden;}
+.bars .t i{display:block;height:100%;width:0;background:var(--violet);transition:width .25s;}
+.bars .r.m .t i{background:var(--rose);}
+.bars .v{font-family:var(--mono);text-align:right;}
+.term{font-family:var(--mono);font-size:12px;line-height:1.7;background:#07080B;border:1px solid var(--line);border-radius:12px;padding:12px;height:220px;overflow:auto;}
+.term .ok{color:var(--mint);} .term .q{color:var(--amber);} .term .f{color:var(--violet);}
+.f6{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:10px;}
+/* composer */
+.composer{padding:14px clamp(16px,4vw,48px) 16px;}
+.cbox{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:10px;background:var(--glass-2);border:1px solid #3A4458;border-radius:18px;padding:8px 8px 8px 18px;}
+.cbox input{flex:1;background:none;border:none;color:var(--text);font:inherit;font-size:15px;padding:8px 0;outline:none;}
+.cbox input::placeholder{color:var(--muted);}
+.send{width:40px;height:40px;border-radius:50%;background:#24272F;border:1px solid #3A3E48;color:var(--text);font-weight:900;}
+.send:disabled{background:#2A3242;color:var(--muted);cursor:default;}
+.note{max-width:980px;margin:8px auto 0;font-size:11.5px;color:var(--muted);text-align:center;}
+#lb{position:fixed;inset:0;background:#05060AEE;display:none;align-items:center;justify-content:center;z-index:50;padding:24px;cursor:zoom-out;}
+#lb.on{display:flex;}
+#lb img{max-width:100%;max-height:100%;border-radius:12px;}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr;padding:8px;}
+  aside{position:fixed;inset:8px auto 8px 8px;width:270px;z-index:30;transform:translateX(-110%);transition:transform .2s;}
+  aside.open{transform:none;}
+  .menu-btn{display:inline-block;}
+  .hero{grid-template-columns:1fr;} .hero .art{min-height:260px;} .hero .me-art{background:radial-gradient(circle at 50% 30%,#2A2D36,#0E0F13 70%);}
+.hero .me-art img{object-fit:contain;object-position:center 30%;opacity:1;inset:18px 0 0 0;height:115%;width:100%;-webkit-mask-image:linear-gradient(180deg,#000 52%,transparent 80%),linear-gradient(90deg,transparent 14%,#000 30%,#000 70%,transparent 86%);-webkit-mask-composite:source-in;mask-image:linear-gradient(180deg,#000 52%,transparent 80%),linear-gradient(90deg,transparent 14%,#000 30%,#000 70%,transparent 86%);mask-composite:intersect;}
+.hero .me-art::after{display:none;}
+.hero .art::after{background:linear-gradient(180deg,transparent 40%,var(--glass-2));}
+  .lab,.pair{grid-template-columns:1fr;} .pair .ar{justify-self:center;transform:rotate(90deg);}
+  .stats{grid-template-columns:1fr 1fr 1fr;} .stat .n{font-size:22px;}
+  .msg.user .q{max-width:85%;}
+  .top .t{display:none;}
+  .cbox input{font-size:14px;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important;}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="panel" id="side">
+    <div class="me"><img class="av" src="img/me_av.png" alt="박준범"><div><b>박준범</b><small>AI Game Maker 지원자</small></div></div>
+    <p class="lbl">PORTFOLIO</p>
+    <nav id="nav"></nav>
+    <p class="lbl">QUICK ASK</p>
+    <div class="quick">
+      <button class="chip" data-ask="ai"><span>AI를 어떻게 썼나요?</span><i></i></button>
+      <button class="chip g" data-ask="judge"><span>직접 판단한 순간은?</span><i></i></button>
+      <button class="chip a" data-ask="role"><span>팀에서 맡은 역할은?</span><i></i></button>
+    </div>
+    <div class="foot"><span class="dot"></span>2027.03부터 풀타임 가능</div>
+  </aside>
+
+  <main class="panel">
+    <div class="top">
+      <button class="pill menu-btn" id="menuBtn" aria-label="메뉴 열기">☰ 메뉴</button>
+      <span class="t">박준범 · AI Game Maker 포트폴리오</span>
+      <span class="sp"></span>
+      <a class="pill" href="https://github.com/junbum8398-blip" target="_blank" rel="noopener">GitHub</a>
+      <button class="pill" id="resetBtn">처음부터</button>
+    </div>
+    <div id="log" role="log" aria-live="polite"></div>
+    <div class="composer">
+      <form class="cbox" id="form">
+        <input id="inp" type="text" autocomplete="off" placeholder="궁금한 걸 물어보세요 · 예: NODEVERSE가 뭐예요?" aria-label="질문 입력">
+        <button class="send" id="send" type="submit" disabled aria-label="보내기">↑</button>
+      </form>
+      <p class="note">질문에 맞춰 미리 준비한 답변을 보여 드려요. 입력한 내용은 어디에도 전송되지 않습니다.</p>
+    </div>
+  </main>
+</div>
+<div id="lb" role="dialog" aria-label="이미지 크게 보기"><img alt=""></div>
+
+<script>
+/* 플레이 영상 링크 (구글 드라이브 공유 링크, 로그인 없이 열리게) */
+const VIDEO_URL = "";
+const img = n => `img/${n}`;
+const fig = (s,a,c) => `<figure><img class="shot" src="${img(s)}" alt="${a}" loading="lazy">${c?`<figcaption class="cap">${c}</figcaption>`:''}</figure>`;
+const follow = (...ids) => `<div class="follow">${ids.map(id=>`<button data-go="${id}">${TOPICS[id].q}</button>`).join('')}</div>`;
+
+const TOPICS = {
+  about:{ nav:'소개', ic:'◉', ct:'HOME', q:'자기소개 해 주세요', keys:['소개','누구','자기','안녕','about','처음'],
+    say:'안녕하세요, <b>박준범</b>입니다. 왼쪽 메뉴를 누르거나 아래 입력창에 궁금한 걸 물어보세요. 미리 준비한 답으로 안내해 드릴게요.',
+    card:()=>`<div class="card hero"><div class="art me-art"><img src="${img('me.png')}" alt="박준범 사진"></div>
+      <div class="info"><h1><span class="l1">박준범</span><span class="l2">AI Game Maker</span></h1>
+      <div class="tags"><span class="tag">AI Game Maker 지원</span><span class="tag">2027.03 풀타임 가능</span><span class="tag">기획 + 구현</span><span class="tag">AI 협업</span></div>
+      <p class="desc">기획서를 쓰고, 일을 작게 쪼개 AI에게 맡기고, <b>직접 플레이하며 검증</b>해서 끝까지 만드는 사람이 되고 싶습니다.</p>
+      <div class="stats"><div class="stat"><p class="n v" data-count="23">0</p><p class="l">팀으로 만든<br>미니게임</p></div>
+      <div class="stat"><p class="n m" data-count="2">0</p><p class="l">역할을 나눈<br>AI 도구</p></div>
+      <div class="stat"><p class="n a" data-count="102">0</p><p class="l">AI 코드 검증<br>테스트</p></div></div></div></div>`,
+    next:['nodeverse','ai','judge'] },
+  nodeverse:{ nav:'NODEVERSE', ic:'◈', ct:'제작 중', q:'NODEVERSE가 뭐예요?', keys:['nodeverse','노드','노드버스','교육','게임','godot','고도','섬','미니게임'],
+    say:'<b>NODEVERSE</b>는 4인 팀으로 만들고 있는 교육용 3D 게임이에요. 로봇을 조종해 섬을 탐험하며 자료구조·알고리즘·SQL을 직접 움직여 배워요. 옆으로 넘겨 보세요.',
+    card:()=>`<div class="car"><div class="track">
+      <div class="slide card"><p class="kick">OVERVIEW · Godot 4.7</p><h3>배움이 모험이 되는 섬</h3><ul><li>4인 팀 프로젝트, 진행 중</li><li>연결된 섬 월드와 실습 미니게임 23개</li><li>행동할 때마다 실행된 코드가 옆에 한 줄씩 쌓임</li><li>AI: Antigravity(Argon 모델), ChatGPT</li></ul><p style="margin-top:10px">${VIDEO_URL?`<a href="${VIDEO_URL}" target="_blank" rel="noopener">▶ 21초 실제 플레이 영상</a>`:'▶ 21초 플레이 영상: 링크 준비 중'}</p></div>
+      <div class="slide">${fig('g_st02.jpg','연결 리스트 실습','연결 리스트 · 끊어진 운송로')}</div>
+      <div class="slide">${fig('g_st05.jpg','해시 테이블 실습','해시 테이블 · 이름으로 찾는 물품대장')}</div>
+      <div class="slide">${fig('g_alg03.jpg','분할 정복 정렬 실습','분할 정복 정렬 · 나누고 합치는 공방')}</div>
+      <div class="slide">${fig('g_sql02.jpg','SQL 그룹 집계 실습','SQL 그룹 집계')}</div>
+      <div class="slide">${fig('g_st09.jpg','그래프 BFS 실습','그래프 BFS · 연결망 조사실')}</div>
+      <div class="slide">${fig('w_hero.jpg','NODEVERSE 웹사이트','제가 만든 소개 웹사이트')}</div>
+    </div><div class="arrows"><button data-dir="-1" aria-label="이전">←</button><button data-dir="1" aria-label="다음">→</button></div></div>`,
+    next:['role','ai','lab'] },
+  role:{ nav:'내 역할', ic:'◫', ct:'팀', q:'팀에서 맡은 역할은?', keys:['역할','담당','맡','팀','기여','본인'],
+    say:'팀 프로젝트라 제가 한 일과 팀원이 한 일을 나눠서 보여 드릴게요. 구분은 GitHub 커밋 기록 기준이에요.',
+    card:()=>`<div class="card" style="overflow-x:auto"><table>
+      <tr><th>영역</th><th>담당</th><th>내용</th></tr>
+      <tr><td>3D 월드</td><td class="mine">본인</td><td>섬 지형과 연결, 플레이어 이동(바다 추락 방지), 카메라</td></tr>
+      <tr><td>학습 데이터 파이프라인</td><td class="mine">본인</td><td>플레이 이벤트 수집, FastAPI 전송, 오프라인 안전 모드, F6 디버그 패널</td></tr>
+      <tr><td>관리자 대시보드</td><td class="mine">본인</td><td>실수 히트맵, 스테이지별 소요 시간 분석</td></tr>
+      <tr><td>웹사이트 · 챗봇 '코봇'</td><td class="mine">본인</td><td>웹 체험판, 소개 영상, AI 안내 챗봇</td></tr>
+      <tr><td>미니게임 설계 · 구현</td><td class="team">팀원 주도</td><td>23개 실습의 규칙과 레벨, SQL 체험형 개선, 성능 최적화 검토</td></tr></table></div>
+      <div class="g2">${fig('w_hero.jpg','NODEVERSE 웹사이트','본인 담당 · 소개 웹사이트')}${fig('w_cobot.jpg','코봇 챗봇','본인 담당 · 안내 챗봇 코봇')}</div>`,
+    next:['lab','ai'] },
+  ai:{ nav:'AI 워크플로우', ic:'◇', ct:'2 tools', q:'AI를 어떻게 썼나요?', keys:['ai','에이아이','워크플로우','도구','지피티','gpt','chatgpt','안티그래비티','antigravity','argon','아르곤','활용','협업'],
+    say:'제가 먼저 기획서와 전체 그림을 정하고, <b>도구마다 잘하는 일</b>을 나눠 맡겼어요. 매 단계 사이에는 제가 결과를 확인하고 다시 지시했어요.',
+    card:()=>`<div class="flow">
+      <div class="step h"><b>01 · 나</b><h4>기획서 · 월드 이미지</h4><p>무엇을 만들지, 전체 모습을 먼저 정함</p></div>
+      <div class="step"><b>02 · ChatGPT</b><h4>에셋 · 3D 레퍼런스</h4><p>전체 지도 이미지를 기준으로 오브젝트 제작</p></div>
+      <div class="step"><b>03 · Antigravity</b><h4>게임 구현</h4><p>기획서와 에셋으로 코드 작성 (Argon 모델)</p></div>
+      <div class="step"><b>04 · ChatGPT</b><h4>웹사이트</h4><p>게임 파일과 필요한 내용 목록을 주고 제작</p></div>
+      <div class="step"><b>05 · Antigravity</b><h4>소개 영상 · 챗봇</h4><p>게임 화면과 조작법 영상, 안내 챗봇</p></div>
+      <div class="step h"><b>매 단계 · 나</b><h4>확인하고 다시 지시</h4><p>부족하면 더 명확한 자료를 주거나 일을 더 작게 나눔</p></div></div>
+      <div class="card"><p class="kick">BEFORE → AFTER</p><div class="pair" style="margin-top:12px">${fig('world.jpg','AI로 만든 월드 기획 이미지','AI로 만든 기획 이미지')}<span class="ar">→</span>${fig('g_world3d.jpg','Godot로 만든 실제 화면','Godot로 구현한 실제 화면')}</div></div>`,
+    next:['judge','role'] },
+  judge:{ nav:'퀘스트 로그', ic:'⬡', ct:'3', q:'직접 판단한 순간은?', keys:['판단','결정','문제','버그','퀘스트','경험','어려','해결','실패','배운'],
+    say:'AI가 다 해 준 게 아니라 <b>제가 방향을 바꾼 순간</b> 세 가지예요. 탭을 눌러 보세요.',
+    card:()=>`<div class="card"><div class="qtabs">
+      <button class="qtab on" data-q="0">01 · 나눠서 주기</button><button class="qtab" data-q="1">02 · 사진으로 말하기</button><button class="qtab" data-q="2">03 · 직접 걸어 보기</button></div>
+      <div class="qpane" data-q="0"><p class="kick">구조화 능력</p><h3>기획서를 한 번에 주지 않고, 나눠서 줬습니다</h3><dl class="quest">
+        <dt>상황</dt><dd>처음엔 전체 기획서를 한 번에 주고 게임을 만들게 했습니다.</dd>
+        <dt>문제</dt><dd>AI가 한꺼번에 많은 일을 하면 몇 가지를 빠뜨린다는 걸 발견했습니다.</dd>
+        <dt>판단</dt><dd>먼저 전체 틀만 짜게 하고, 세부 기능은 하나씩 맡기고 하나씩 점검했습니다.</dd>
+        <dt>결과</dt><dd>빠지는 기능이 줄고, 문제가 생겨도 어느 단계인지 바로 찾을 수 있었습니다.</dd></dl></div>
+      <div class="qpane" data-q="1" hidden><p class="kick">AI 리더십</p><h3>말보다 더 명확한 사진을 줬습니다</h3><div class="g2"><dl class="quest">
+        <dt>상황</dt><dd>AI가 만든 에셋과 미니게임이 의도와 달랐습니다.</dd>
+        <dt>판단</dt><dd>설명을 늘리기보다, 원하는 모습이 보이는 사진을 함께 주는 게 낫다고 봤습니다.</dd>
+        <dt>적용</dt><dd>미니게임도 만드는 방식 설명과 참고 사진을 같이 줘서 훨씬 수월하게 만들었습니다.</dd></dl>
+        ${fig('objects.jpg','AI로 만든 오브젝트','지도를 기준으로 AI가 만든 오브젝트')}</div></div>
+      <div class="qpane" data-q="2" hidden><p class="kick">학습 실행력</p><h3>코드가 아니라 직접 플레이하며 버그를 잡았습니다</h3><dl class="quest">
+        <dt>버그 1</dt><dd>캐릭터가 바다로 떨어짐 → 이동 방향 앞에 땅이 있는지 먼저 확인하고, 없으면 막되 해안선을 따라서는 움직이게 했습니다.</dd>
+        <dt>버그 2</dt><dd>길이 열려 있는데 지나갈 수 없음 → 막히는 위치와 상황을 짚어 AI에 수정을 맡기고, 직접 다시 걸어가 확인했습니다.</dd>
+        <dt>배운 점</dt><dd>AI가 만든 코드는 실행된다고 끝이 아니라, 플레이어 입장에서 직접 해 봐야 문제가 보입니다.</dd></dl></div></div>`,
+    next:['lab','netfit'] },
+  lab:{ nav:'데이터 실험실', ic:'◎', ct:'DEMO', q:'실수 데이터는 왜 모았어요?', keys:['데이터','텔레메트리','실수','로그','파이프라인','fastapi','서버','대시보드','기록','오프라인'],
+    say:'교육용 게임은 클리어 여부만 보면 <b>어디서, 왜 막혔는지</b> 알 수 없어요. 그래서 실수와 되돌리기까지 기록했어요. 직접 눌러 보세요. 서버를 꺼도 게임은 멈추지 않아요.',
+    card:()=>`<div class="card"><p class="kick">DEMO · 작동 원리를 보여 주는 체험판 (실제 서버와 연결되지 않음)</p>
+      <div class="lab" style="margin-top:14px"><div>
+        <div class="evs"><button class="ev" data-e="start">▶ 시작</button><button class="ev" data-e="move">↔ 이동</button><button class="ev bad" data-e="mistake">✕ 실수</button><button class="ev" data-e="undo">↺ 되돌리기</button><button class="ev" data-e="clear">★ 클리어</button></div>
+        <div class="tg"><button class="sw" aria-label="서버 연결 켜고 끄기" aria-pressed="true"></button><span class="swt">서버 연결 ON</span></div>
+        <div class="bars"></div><p class="f6">F6 DEBUG · sent 0 · queued 0</p></div>
+        <div class="term"><div class="f">// 버튼을 누르면 이벤트가 여기에 쌓여요</div></div></div></div>
+      <div class="g3"><div class="card"><p class="kick">비동기 전송</p><p>전송 중에도 화면과 조작이 끊기지 않음</p></div><div class="card"><p class="kick">오프라인 안전 모드</p><p>서버가 죽어도 게임은 계속, 데이터는 큐에 보관</p></div><div class="card"><p class="kick">3초 타임아웃 · F6</p><p>응답이 늦으면 정리하고, 플레이 중 상태 확인</p></div></div>`,
+    init:telemetry, next:['netfit','next'] },
+  netfit:{ nav:'NetFit', ic:'✦', ct:'LIVE', q:'NetFit은 뭐예요?', keys:['netfit','넷핏','피트니스','운동','웹','django','배포','groq','gemini'],
+    say:'<b>NetFit</b>은 처음부터 끝까지 Antigravity와 함께 만들어 실제로 배포한 웹 서비스예요. 저는 요구사항을 정하고, 결과를 확인하고, 다시 지시했어요.',
+    card:()=>`<div class="g2" style="grid-template-columns:2fr 1fr">${fig('nf_dashboard.jpg','NetFit 대시보드','공공체육시설 + AI 운동 코칭 + 게임 요소')}${fig('nf_fitbot.jpg','NetFit AI 코치','AI 운동 코치 챗봇')}</div>
+      <div class="g3"><div class="card"><p class="kick">판단 1</p><h3 style="font-size:17px">무료 AI가 멈출 때를 대비</h3><p>Groq과 Gemini 자동 전환 구조로 설계</p></div>
+      <div class="card"><p class="kick">판단 2</p><h3 style="font-size:17px">지우지 않고 격리</h3><p>결측 데이터를 따로 보관해 연결 데이터 보존</p></div>
+      <div class="card"><p class="kick">검증</p><h3 style="font-size:17px">테스트 102개</h3><p>AI가 만든 코드를 단위 테스트로 확인</p></div></div>`,
+    next:['stack','next'] },
+  stack:{ nav:'기술 스택', ic:'⌘', ct:'12', q:'어떤 기술을 써요?', keys:['기술','스택','언어','stack','파이썬','python','툴','도구들'],
+    say:'프로젝트에서 실제로 쓴 것들이에요. 보라색은 AI 도구예요. SK네트웍스 Family AI 캠퍼스 데이터 엔지니어링 2기에서 배우고 있어요.',
+    card:()=>`<div class="card"><div class="stack">${['Godot 4','GDScript','Python','FastAPI','Django','PostgreSQL','Git','Render'].map(t=>`<span>${t}</span>`).join('')}${['Antigravity','ChatGPT','Groq','Gemini'].map(t=>`<span class="ai">${t}</span>`).join('')}</div></div>`,
+    next:['next'] },
+  next:{ nav:'다음 목표', ic:'→', ct:'', q:'인턴십에서 뭘 하고 싶어요?', keys:['목표','인턴','하고','넷마블','지원','동기','앞으로','연락','이메일','contact'],
+    say:'넷마블네오 인턴십에서 해 보고 싶은 일 세 가지예요. 끝까지 봐 주셔서 감사합니다.',
+    card:()=>`<div class="g3"><div class="card"><p class="kick">01</p><h3 style="font-size:17px">기획과 구현을 함께</h3><p>기획서를 쓰고 AI와 직접 구현까지 해서, 플레이 가능한 결과물로 아이디어를 검증하고 싶습니다.</p></div>
+      <div class="card"><p class="kick">02</p><h3 style="font-size:17px">데이터로 재미를 확인</h3><p>플레이 데이터를 모아 어디서 막히고 재미를 느끼는지 근거를 갖고 고치고 싶습니다.</p></div>
+      <div class="card"><p class="kick">03</p><h3 style="font-size:17px">AI 협업 방식을 나누기</h3><p>현업의 AI 노하우를 배우고, 제가 찾은 방식도 팀에 공유하고 싶습니다.</p></div></div>
+      <div class="card"><p>박준범 · junbum8398@gmail.com · <a href="https://github.com/junbum8398-blip" target="_blank" rel="noopener">github.com/junbum8398-blip</a></p></div>`,
+    next:['about'] },
+};
+const NAV = ['about','nodeverse','role','ai','judge','lab','netfit','stack','next'];
+
+const $ = s => document.querySelector(s);
+const log = $('#log');
+$('#nav').innerHTML = NAV.map(id=>`<button class="nav" data-go="${id}"><span class="ic">${TOPICS[id].ic}</span>${TOPICS[id].nav}${TOPICS[id].ct?`<span class="ct">${TOPICS[id].ct}</span>`:''}</button>`).join('');
+
+let busy=false;
+function setNav(id){ document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('on',b.dataset.go===id)); }
+function addUser(text){
+  const m=document.createElement('div'); m.className='msg user'; m.innerHTML=`<div class="q"></div>`; m.querySelector('.q').textContent=text;
+  log.appendChild(m); m.scrollIntoView({block:'end'});
+}
+function answer(id, asked){
+  if(busy) return; busy=true;
+  const t=TOPICS[id]; setNav(id);
+  if(asked!==false) addUser(asked||t.q);
+  const m=document.createElement('div'); m.className='msg'; m.innerHTML=`<div class="bot"><img src="img/me_av.png" alt=""></div><div class="body"><div class="typing"><i></i><i></i><i></i></div></div>`;
+  log.appendChild(m); m.scrollIntoView({block:'end'});
+  const delay = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 550;
+  setTimeout(()=>{
+    const body=m.querySelector('.body');
+    body.innerHTML=`<p class="say">${t.say}</p>${t.card()}${t.next?follow(...t.next):''}`;
+    wire(body); if(t.init) t.init(body);
+    m.scrollIntoView({block:'start',behavior:'smooth'});
+    busy=false;
+  }, delay);
+}
+function miss(text){
+  addUser(text);
+  const m=document.createElement('div'); m.className='msg';
+  m.innerHTML=`<div class="bot"><img src="img/me_av.png" alt=""></div><div class="body"><p class="say">그 질문에는 미리 써 둔 답이 없어요. 대신 이런 걸 물어볼 수 있어요.</p>${follow('nodeverse','ai','judge','role','lab')}</div>`;
+  log.appendChild(m); wire(m); m.scrollIntoView({block:'start',behavior:'smooth'});
+}
+function route(text){
+  const q=text.toLowerCase().replace(/\s+/g,'');
+  let best=null, score=0;
+  for(const id of NAV){ const s=TOPICS[id].keys.reduce((a,k)=>a+(q.includes(k.toLowerCase())?k.length:0),0); if(s>score){score=s;best=id;} }
+  if(best) answer(best,text); else miss(text);
+}
+function wire(root){
+  root.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{ answer(b.dataset.go); closeSide(); }));
+  root.querySelectorAll('.shot').forEach(i=>i.addEventListener('click',()=>{ const lb=$('#lb'); lb.querySelector('img').src=i.src; lb.querySelector('img').alt=i.alt; lb.classList.add('on'); }));
+  root.querySelectorAll('[data-count]').forEach(el=>{ const to=+el.dataset.count,t0=performance.now(); const st=n=>{const p=Math.min(1,(n-t0)/900); el.textContent=Math.round(to*(1-Math.pow(1-p,3))); if(p<1) requestAnimationFrame(st);}; requestAnimationFrame(st); });
+  root.querySelectorAll('.car').forEach(c=>{ const tr=c.querySelector('.track'); c.querySelectorAll('[data-dir]').forEach(b=>b.addEventListener('click',()=>tr.scrollBy({left:+b.dataset.dir*tr.clientWidth*.8,behavior:'smooth'}))); });
+  root.querySelectorAll('.qtabs').forEach(tabs=>{ const card=tabs.parentElement; tabs.querySelectorAll('.qtab').forEach(t=>t.addEventListener('click',()=>{ tabs.querySelectorAll('.qtab').forEach(x=>x.classList.toggle('on',x===t)); card.querySelectorAll('.qpane').forEach(p=>p.hidden=p.dataset.q!==t.dataset.q); })); });
+}
+function telemetry(root){
+  const names={start:'시작',move:'이동',mistake:'실수',undo:'되돌리기',clear:'클리어'};
+  const c={start:0,move:0,mistake:0,undo:0,clear:0}; let on=true,sent=0,queue=[];
+  const term=root.querySelector('.term'),bars=root.querySelector('.bars'),sw=root.querySelector('.sw'),swt=root.querySelector('.swt'),f6=root.querySelector('.f6');
+  const line=(cl,t)=>{const d=document.createElement('div');d.className=cl;d.textContent=t;term.appendChild(d);term.scrollTop=term.scrollHeight;};
+  const draw=()=>{const mx=Math.max(1,...Object.values(c)); bars.innerHTML=Object.keys(c).map(k=>`<div class="r ${k==='mistake'?'m':''}"><span>${names[k]}</span><span class="t"><i style="width:${c[k]/mx*100}%"></i></span><span class="v">${c[k]}</span></div>`).join('');};
+  const meta=r=>{f6.textContent=`F6 DEBUG · sent ${sent} · queued ${queue.length}${r?' · RTT '+r:''}`;};
+  root.querySelectorAll('.ev').forEach(b=>b.addEventListener('click',()=>{ const e=b.dataset.e; c[e]++; draw(); const ts=new Date().toTimeString().slice(0,8);
+    if(on){sent++; const r=(18+Math.round(Math.random()*30))+'ms'; line('ok',`${ts} POST /v1/events {type:"${e}"} → 200 · ${r}`); meta(r);}
+    else{queue.push(e); line('q',`${ts} 서버 없음 → 큐에 보관 (${queue.length}건) · 게임은 계속`); meta();} }));
+  sw.addEventListener('click',()=>{ on=!on; sw.classList.toggle('off',!on); sw.setAttribute('aria-pressed',on); swt.textContent='서버 연결 '+(on?'ON':'OFF');
+    if(on&&queue.length){line('f',`재연결 · 큐에 쌓인 ${queue.length}건 재전송 → 200`); sent+=queue.length; queue=[];} else if(!on) line('q','연결 끊김 · 오프라인 안전 모드'); meta(); });
+  draw();
+}
+/* sidebar & composer */
+document.querySelectorAll('#nav [data-go]').forEach(b=>b.addEventListener('click',()=>{ answer(b.dataset.go); closeSide(); }));
+document.querySelectorAll('[data-ask]').forEach(b=>b.addEventListener('click',()=>{ answer(b.dataset.ask, b.textContent.trim()); closeSide(); }));
+const inp=$('#inp'), send=$('#send');
+inp.addEventListener('input',()=>send.disabled=!inp.value.trim());
+$('#form').addEventListener('submit',e=>{ e.preventDefault(); const v=inp.value.trim(); if(!v||busy) return; inp.value=''; send.disabled=true; route(v); });
+$('#resetBtn').addEventListener('click',()=>{ log.innerHTML=''; answer('about',false); });
+const side=$('#side'); function closeSide(){ side.classList.remove('open'); }
+$('#menuBtn').addEventListener('click',()=>side.classList.toggle('open'));
+$('#lb').addEventListener('click',()=>$('#lb').classList.remove('on'));
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ $('#lb').classList.remove('on'); closeSide(); } });
+/* rotating placeholder */
+const ph=['NODEVERSE가 뭐예요?','AI를 어떻게 썼나요?','직접 판단한 순간은?','실수 데이터는 왜 모았어요?','팀에서 맡은 역할은?'];
+let pi=0; setInterval(()=>{ if(document.activeElement!==inp && !inp.value){ pi=(pi+1)%ph.length; inp.placeholder='궁금한 걸 물어보세요 · 예: '+ph[pi]; } },3000);
+answer('about',false);
+</script>
+</body>
+</html>
