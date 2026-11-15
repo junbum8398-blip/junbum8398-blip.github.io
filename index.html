@@ -193,7 +193,7 @@ td{padding:11px 10px;border-bottom:1px solid #222937;line-height:1.6;vertical-al
 <body>
 <div class="app">
   <aside class="panel" id="side">
-    <div class="me"><img class="av" src="img/me_av.png" alt="박준범"><div><b>박준범</b><small>AI Game Maker 지원자</small></div></div>
+    <div class="me"><img class="av" src="me_av.png" alt="박준범"><div><b>박준범</b><small>AI Game Maker 지원자</small></div></div>
     <p class="lbl">PORTFOLIO</p>
     <nav id="nav"></nav>
     <p class="lbl">QUICK ASK</p>
@@ -228,7 +228,7 @@ td{padding:11px 10px;border-bottom:1px solid #222937;line-height:1.6;vertical-al
 <script>
 /* 플레이 영상 링크 (구글 드라이브 공유 링크, 로그인 없이 열리게) */
 const VIDEO_URL = "";
-const img = n => `img/${n}`;
+const img = n => `${n}`;
 const fig = (s,a,c) => `<figure><img class="shot" src="${img(s)}" alt="${a}" loading="lazy">${c?`<figcaption class="cap">${c}</figcaption>`:''}</figure>`;
 const follow = (...ids) => `<div class="follow">${ids.map(id=>`<button data-go="${id}">${TOPICS[id].q}</button>`).join('')}</div>`;
 
@@ -341,7 +341,7 @@ function answer(id, asked){
   if(busy) return; busy=true;
   const t=TOPICS[id]; setNav(id);
   if(asked!==false) addUser(asked||t.q);
-  const m=document.createElement('div'); m.className='msg'; m.innerHTML=`<div class="bot"><img src="img/me_av.png" alt=""></div><div class="body"><div class="typing"><i></i><i></i><i></i></div></div>`;
+  const m=document.createElement('div'); m.className='msg'; m.innerHTML=`<div class="bot"><img src="me_av.png" alt=""></div><div class="body"><div class="typing"><i></i><i></i><i></i></div></div>`;
   log.appendChild(m); m.scrollIntoView({block:'end'});
   const delay = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 550;
   setTimeout(()=>{
@@ -355,7 +355,7 @@ function answer(id, asked){
 function miss(text){
   addUser(text);
   const m=document.createElement('div'); m.className='msg';
-  m.innerHTML=`<div class="bot"><img src="img/me_av.png" alt=""></div><div class="body"><p class="say">그 질문에는 미리 써 둔 답이 없어요. 대신 이런 걸 물어볼 수 있어요.</p>${follow('nodeverse','ai','judge','role','lab')}</div>`;
+  m.innerHTML=`<div class="bot"><img src="me_av.png" alt=""></div><div class="body"><p class="say">그 질문에는 미리 써 둔 답이 없어요. 대신 이런 걸 물어볼 수 있어요.</p>${follow('nodeverse','ai','judge','role','lab')}</div>`;
   log.appendChild(m); wire(m); m.scrollIntoView({block:'start',behavior:'smooth'});
 }
 function route(text){
