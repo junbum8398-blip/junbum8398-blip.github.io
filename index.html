@@ -143,6 +143,16 @@ td{padding:11px 10px;border-bottom:1px solid #222937;line-height:1.6;vertical-al
 .follow{display:flex;flex-wrap:wrap;gap:8px;}
 .follow button{font-size:13px;padding:7px 12px;border-radius:999px;border:1px dashed #3A4458;color:var(--muted);}
 .follow button:hover{border-style:solid;color:var(--text);border-color:var(--muted);}
+.steps5{display:flex;flex-direction:column;gap:8px;}
+.s5{display:grid;grid-template-columns:28px 130px 1fr auto;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#0F1218;}
+.s5 .n{font-family:var(--mono);font-weight:700;color:var(--violet);}
+.s5 b{font-size:14.5px;}
+.s5 p{font-size:13.5px;line-height:1.55;color:var(--muted);margin:0;}
+.s5 .t{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid #3A3E48;color:#A99CFF;white-space:nowrap;}
+.s5 .t.v{color:var(--amber);} .s5 .t.m{color:var(--mint);}
+.aibox{border-color:#FF7A8A55;} .aibox .kick{color:var(--rose);}
+.mebox{border-color:#7FD8E855;} .mebox .kick{color:var(--amber);}
+@media (max-width:860px){.s5{grid-template-columns:24px 1fr;}.s5 p,.s5 .t{grid-column:2;justify-self:start;}}
 /* lab */
 .lab{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .evs{display:flex;flex-wrap:wrap;gap:8px;}
@@ -198,7 +208,7 @@ td{padding:11px 10px;border-bottom:1px solid #222937;line-height:1.6;vertical-al
     <nav id="nav"></nav>
     <p class="lbl">QUICK ASK</p>
     <div class="quick">
-      <button class="chip" data-ask="ai"><span>AI를 어떻게 썼나요?</span><i></i></button>
+      <button class="chip" data-ask="log"><span>AI와 일한 과정은?</span><i></i></button>
       <button class="chip g" data-ask="judge"><span>직접 판단한 순간은?</span><i></i></button>
       <button class="chip a" data-ask="role"><span>팀에서 맡은 역할은?</span><i></i></button>
     </div>
@@ -242,7 +252,7 @@ const TOPICS = {
       <div class="stats"><div class="stat"><p class="n v" data-count="23">0</p><p class="l">팀으로 만든<br>미니게임</p></div>
       <div class="stat"><p class="n m" data-count="2">0</p><p class="l">역할을 나눈<br>AI 도구</p></div>
       <div class="stat"><p class="n a" data-count="102">0</p><p class="l">AI 코드 검증<br>테스트</p></div></div></div></div>`,
-    next:['nodeverse','ai','judge'] },
+    next:['nodeverse','log','judge'] },
   nodeverse:{ nav:'NODEVERSE', ic:'◈', ct:'제작 중', q:'NODEVERSE가 뭐예요?', keys:['nodeverse','노드','노드버스','교육','게임','godot','고도','섬','미니게임'],
     say:'<b>NODEVERSE</b>는 4인 팀으로 만들고 있는 교육용 3D 게임이에요. 로봇을 조종해 섬을 탐험하며 자료구조·알고리즘·SQL을 직접 움직여 배워요. 옆으로 넘겨 보세요.',
     card:()=>`<div class="car"><div class="track">
@@ -266,6 +276,18 @@ const TOPICS = {
       <tr><td>미니게임 설계 · 구현</td><td class="team">팀원 주도</td><td>23개 실습의 규칙과 레벨, SQL 체험형 개선, 성능 최적화 검토</td></tr></table></div>
       <div class="g2">${fig('w_hero.jpg','NODEVERSE 웹사이트','본인 담당 · 소개 웹사이트')}${fig('w_cobot.jpg','코봇 챗봇','본인 담당 · 안내 챗봇 코봇')}</div>`,
     next:['lab','ai'] },
+  log:{ nav:'AI 실험 로그', ic:'★', ct:'5단계', q:'AI와 어떻게 일했는지 단계별로 보여 주세요', keys:['실험','로그','단계','과정','구조화','쪼개','나눠'],
+    say:'NODEVERSE 3D 월드를 만들 때의 과정을 다섯 단계로 정리했어요. 단계마다 어떤 역량이 쓰였는지 표시해 뒀어요.',
+    card:()=>`<div class="card"><div class="steps5">
+      <div class="s5"><span class="n">1</span><b>상황 정의</b><p>자료구조를 직접 만져 보며 배우는 교육용 3D 게임을 4인이 처음부터 만들기로 함</p><span class="t">구조화</span></div>
+      <div class="s5"><span class="n">2</span><b>문제·목표 정의</b><p>기획서를 통째로 주자 AI가 몇 가지를 빠뜨림 → 빠짐없이 완성하는 방식이 필요</p><span class="t">구조화</span></div>
+      <div class="s5"><span class="n">3</span><b>작게 쪼개기</b><p>틀(섬·이동·카메라) 먼저, 세부 기능은 하나씩 맡기고 하나씩 점검</p><span class="t">구조화</span></div>
+      <div class="s5"><span class="n">4</span><b>AI 협업 세팅</b><p>이미지·웹은 ChatGPT, 구현은 Antigravity. 글보다 사진으로 목표를 전달</p><span class="t v">AI 리더십</span></div>
+      <div class="s5"><span class="n">5</span><b>실행하며 익히기</b><p>처음 쓰는 Godot를 직접 플레이하며 익히고, 바다 추락·길 막힘 버그를 찾아 수정</p><span class="t m">학습 실행력</span></div>
+    </div></div>
+    <div class="g2"><div class="card aibox"><p class="kick">AI에게 맡긴 것</p><ul><li>에셋·3D 모델 참고 이미지</li><li>게임 코드 구현</li><li>웹사이트·소개 영상</li></ul></div>
+    <div class="card mebox"><p class="kick">내가 한 것</p><ul><li>무엇을 만들지 기획서로 정의</li><li>일을 쪼개는 순서 결정</li><li>결과를 플레이하며 검증하고 다시 지시</li></ul></div></div>`,
+    next:['judge','ai','role'] },
   ai:{ nav:'AI 워크플로우', ic:'◇', ct:'2 tools', q:'AI를 어떻게 썼나요?', keys:['ai','에이아이','워크플로우','도구','지피티','gpt','chatgpt','안티그래비티','antigravity','argon','아르곤','활용','협업'],
     say:'제가 먼저 기획서와 전체 그림을 정하고, <b>도구마다 잘하는 일</b>을 나눠 맡겼어요. 매 단계 사이에는 제가 결과를 확인하고 다시 지시했어요.',
     card:()=>`<div class="flow">
@@ -325,7 +347,7 @@ const TOPICS = {
       <div class="card"><p>박준범 · junbum8398@gmail.com · <a href="https://github.com/junbum8398-blip" target="_blank" rel="noopener">github.com/junbum8398-blip</a></p></div>`,
     next:['about'] },
 };
-const NAV = ['about','nodeverse','role','ai','judge','lab','netfit','stack','next'];
+const NAV = ['about','nodeverse','log','role','ai','judge','lab','netfit','stack','next'];
 
 const $ = s => document.querySelector(s);
 const log = $('#log');
