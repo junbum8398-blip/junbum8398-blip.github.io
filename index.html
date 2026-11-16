@@ -34,7 +34,8 @@ a{color:var(--amber);}
 .panel{background:var(--glass);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(14px);}
 
 /* sidebar */
-aside{display:flex;flex-direction:column;overflow:hidden;}
+aside{display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#3A3E48 transparent;}
+aside .foot{position:sticky;bottom:0;background:var(--glass);backdrop-filter:blur(14px);}
 .me{display:flex;gap:12px;align-items:center;padding:18px;border-bottom:1px solid var(--line);}
 .av{width:46px;height:46px;border-radius:14px;object-fit:cover;border:1px solid #4A4F5C;filter:grayscale(.2);display:grid;place-items:center;font-weight:900;background:linear-gradient(135deg,var(--amber),var(--rose));color:#1A0F05;}
 .me b{display:block;font-size:16px;}
@@ -110,9 +111,10 @@ main{display:flex;flex-direction:column;overflow:hidden;min-width:0;}
 .cap{font-size:12.5px;color:var(--muted);margin-top:6px;}
 figure{display:flex;flex-direction:column;}
 /* carousel */
-.car{position:relative;}
-.track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 10px;scrollbar-width:none;}
-.track::-webkit-scrollbar{display:none;}
+.car{position:relative;min-width:0;max-width:100%;}
+.track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;scrollbar-width:thin;scrollbar-color:#3A3E48 transparent;cursor:grab;}
+.track.drag{cursor:grabbing;scroll-snap-type:none;user-select:none;}
+.track::-webkit-scrollbar{height:6px;} .track::-webkit-scrollbar-thumb{background:#3A3E48;border-radius:3px;}
 .slide{flex:0 0 min(420px,82%);scroll-snap-align:start;}
 .arrows{display:flex;gap:8px;justify-content:flex-end;}
 .arrows button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);}
@@ -390,7 +392,15 @@ function wire(root){
   root.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{ answer(b.dataset.go); closeSide(); }));
   root.querySelectorAll('.shot').forEach(i=>i.addEventListener('click',()=>{ const lb=$('#lb'); lb.querySelector('img').src=i.src; lb.querySelector('img').alt=i.alt; lb.classList.add('on'); }));
   root.querySelectorAll('[data-count]').forEach(el=>{ const to=+el.dataset.count,t0=performance.now(); const st=n=>{const p=Math.min(1,(n-t0)/900); el.textContent=Math.round(to*(1-Math.pow(1-p,3))); if(p<1) requestAnimationFrame(st);}; requestAnimationFrame(st); });
-  root.querySelectorAll('.car').forEach(c=>{ const tr=c.querySelector('.track'); c.querySelectorAll('[data-dir]').forEach(b=>b.addEventListener('click',()=>tr.scrollBy({left:+b.dataset.dir*tr.clientWidth*.8,behavior:'smooth'}))); });
+  root.querySelectorAll('.car').forEach(c=>{ const tr=c.querySelector('.track');
+    c.querySelectorAll('[data-dir]').forEach(b=>b.addEventListener('click',()=>tr.scrollBy({left:+b.dataset.dir*tr.clientWidth*.8,behavior:'smooth'})));
+    tr.addEventListener('wheel',e=>{ if(Math.abs(e.deltaY)<=Math.abs(e.deltaX)) return; const max=tr.scrollWidth-tr.clientWidth; if((e.deltaY>0&&tr.scrollLeft<max-1)||(e.deltaY<0&&tr.scrollLeft>0)){ e.preventDefault(); tr.scrollLeft+=e.deltaY; } },{passive:false});
+    let down=false,sx=0,sl=0,moved=false;
+    tr.addEventListener('pointerdown',e=>{ if(e.pointerType!=='mouse') return; down=true; moved=false; sx=e.clientX; sl=tr.scrollLeft; });
+    tr.addEventListener('pointermove',e=>{ if(!down) return; const dx=e.clientX-sx; if(Math.abs(dx)>4){ moved=true; tr.classList.add('drag'); } tr.scrollLeft=sl-dx; });
+    const up=()=>{ down=false; tr.classList.remove('drag'); }; tr.addEventListener('pointerup',up); tr.addEventListener('pointerleave',up);
+    tr.addEventListener('click',e=>{ if(moved){ e.stopPropagation(); e.preventDefault(); moved=false; } },true);
+  });
   root.querySelectorAll('.qtabs').forEach(tabs=>{ const card=tabs.parentElement; tabs.querySelectorAll('.qtab').forEach(t=>t.addEventListener('click',()=>{ tabs.querySelectorAll('.qtab').forEach(x=>x.classList.toggle('on',x===t)); card.querySelectorAll('.qpane').forEach(p=>p.hidden=p.dataset.q!==t.dataset.q); })); });
 }
 function telemetry(root){
