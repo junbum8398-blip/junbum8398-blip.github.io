@@ -259,6 +259,7 @@ const TOPICS = {
     say:'<b>NODEVERSE</b>는 4인 팀으로 만들고 있는 교육용 3D 게임이에요. 로봇을 조종해 섬을 탐험하며 자료구조·알고리즘·SQL을 직접 움직여 배워요. 옆으로 넘겨 보세요.',
     card:()=>`<div class="car"><div class="track">
       <div class="slide card"><p class="kick">OVERVIEW · Godot 4.7</p><h3>배움이 모험이 되는 섬</h3><ul><li>4인 팀 프로젝트, 진행 중</li><li>연결된 섬 월드와 실습 미니게임 23개</li><li>행동할 때마다 실행된 코드가 옆에 한 줄씩 쌓임</li><li>AI: Antigravity(Argon 모델), ChatGPT</li></ul><p style="margin-top:10px">${VIDEO_URL?`<a href="${VIDEO_URL}" target="_blank" rel="noopener">▶ 21초 실제 플레이 영상</a>`:'▶ 21초 플레이 영상: 링크 준비 중'}</p></div>
+      <div class="slide card"><p class="kick">DESIGN INTENT · 왜 이렇게 만들었나</p><h3>재미는 목적이 아니라 수단</h3><p>교육용 게임의 목표는 코딩 실력이 느는 것입니다. 그래서 <b>재미 자체보다, 어떻게 하면 조금이라도 더 재밌어서 끝까지 하고 실력이 늘지</b>에 집중했습니다.</p><ul><li>개념을 읽는 대신 직접 움직여 보게 함</li><li>실습마다 미니게임과 이야기를 붙임</li><li>내 행동이 코드로 바로 보이게 함</li></ul></div>
       <div class="slide">${fig('g_st02.jpg','연결 리스트 실습','연결 리스트 · 끊어진 운송로')}</div>
       <div class="slide">${fig('g_st05.jpg','해시 테이블 실습','해시 테이블 · 이름으로 찾는 물품대장')}</div>
       <div class="slide">${fig('g_alg03.jpg','분할 정복 정렬 실습','분할 정복 정렬 · 나누고 합치는 공방')}</div>
@@ -306,10 +307,10 @@ const TOPICS = {
       <div class="step h"><b>매 단계 · 나</b><h4>확인하고 다시 지시</h4><p>부족하면 더 명확한 자료를 주거나 일을 더 작게 나눔</p></div></div>
       <div class="card"><p class="kick">BEFORE → AFTER</p><div class="pair" style="margin-top:12px">${fig('world.jpg','AI로 만든 월드 기획 이미지','AI로 만든 기획 이미지')}<span class="ar">→</span>${fig('g_world3d.jpg','Godot로 만든 실제 화면','Godot로 구현한 실제 화면')}</div></div>`,
     next:['judge','role'] },
-  judge:{ nav:'퀘스트 로그', ic:'⬡', ct:'3', q:'직접 판단한 순간은?', keys:['판단','결정','문제','버그','퀘스트','경험','어려','해결','실패','배운'],
-    say:'AI가 다 해 준 게 아니라 <b>제가 방향을 바꾼 순간</b> 세 가지예요. 탭을 눌러 보세요.',
+  judge:{ nav:'퀘스트 로그', ic:'⬡', ct:'4', q:'직접 판단한 순간은?', keys:['판단','결정','문제','버그','퀘스트','경험','어려','해결','실패','배운'],
+    say:'AI가 다 해 준 게 아니라 <b>제가 방향을 바꾼 순간</b> 네 가지예요. 탭을 눌러 보세요.',
     card:()=>`<div class="card"><div class="qtabs">
-      <button class="qtab on" data-q="0">01 · 나눠서 주기</button><button class="qtab" data-q="1">02 · 사진으로 말하기</button><button class="qtab" data-q="2">03 · 직접 걸어 보기</button></div>
+      <button class="qtab on" data-q="0">01 · 나눠서 주기</button><button class="qtab" data-q="1">02 · 사진으로 말하기</button><button class="qtab" data-q="2">03 · 직접 걸어 보기</button><button class="qtab" data-q="3">04 · AI 티 지우기</button></div>
       <div class="qpane" data-q="0"><p class="kick">구조화 능력</p><h3>기획을 한 번에 주지 않고, 나눠서 줬습니다</h3><dl class="quest">
         <dt>상황</dt><dd>처음엔 맡은 파트의 기획을 한 번에 주고 만들게 했습니다.</dd>
         <dt>문제</dt><dd>AI가 한꺼번에 많은 일을 하면 몇 가지를 빠뜨린다는 걸 발견했습니다.</dd>
@@ -323,7 +324,12 @@ const TOPICS = {
       <div class="qpane" data-q="2" hidden><p class="kick">학습 실행력</p><h3>코드가 아니라 직접 플레이하며 버그를 잡았습니다</h3><dl class="quest">
         <dt>버그 1</dt><dd>캐릭터가 바다로 떨어짐 → 이동 방향 앞에 땅이 있는지 먼저 확인하고, 없으면 막되 해안선을 따라서는 움직이게 했습니다.</dd>
         <dt>버그 2</dt><dd>길이 열려 있는데 지나갈 수 없음 → 막히는 위치와 상황을 짚어 AI에 수정을 맡기고, 직접 다시 걸어가 확인했습니다.</dd>
-        <dt>배운 점</dt><dd>AI가 만든 코드는 실행된다고 끝이 아니라, 플레이어 입장에서 직접 해 봐야 문제가 보입니다.</dd></dl></div></div>`,
+        <dt>배운 점</dt><dd>AI가 만든 코드는 실행된다고 끝이 아니라, 플레이어 입장에서 직접 해 봐야 문제가 보입니다.</dd></dl></div>
+      <div class="qpane" data-q="3" hidden><p class="kick">AI 리더십</p><h3>기획서에 없는 부분도 직접 판단해 다듬었습니다</h3><dl class="quest">
+        <dt>상황</dt><dd>AI가 만든 오브젝트 배치와 크기, 디자인 창이 한눈에 AI가 만든 티가 났습니다.</dd>
+        <dt>판단</dt><dd>기획서에 적혀 있지 않은 부분이라도, 플레이어가 보기에 어색한 건 그냥 두면 안 된다고 봤습니다.</dd>
+        <dt>행동</dt><dd>배치·크기·창 디자인을 하나하나 짚어 어떻게 바꿀지 직접 정하고 다시 지시했습니다.</dd>
+        <dt>배운 점</dt><dd>AI는 기획서에 있는 것만 만듭니다. 빈칸을 채우고 완성도를 정하는 건 사람의 몫입니다.</dd></dl></div></div>`,
     next:['lab','netfit'] },
   lab:{ nav:'데이터 실험실', ic:'◎', ct:'DEMO', q:'실수 데이터는 왜 모았어요?', keys:['데이터','텔레메트리','실수','로그','파이프라인','fastapi','서버','대시보드','기록','오프라인'],
     say:'교육용 게임은 클리어 여부만 보면 <b>어디서, 왜 막혔는지</b> 알 수 없어요. 그래서 실수와 되돌리기까지 기록했어요. 직접 눌러 보세요. 서버를 꺼도 게임은 멈추지 않아요.',
