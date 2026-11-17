@@ -116,6 +116,7 @@ figure{display:flex;flex-direction:column;}
 .track.drag{cursor:grabbing;scroll-snap-type:none;user-select:none;}
 .track::-webkit-scrollbar{height:6px;} .track::-webkit-scrollbar-thumb{background:#3A3E48;border-radius:3px;}
 .slide{flex:0 0 min(420px,82%);scroll-snap-align:start;}
+.vid{margin-bottom:12px;} .vid video{display:block;width:100%;border-radius:12px;margin-top:10px;background:#000;aspect-ratio:16/9;}
 .arrows{display:flex;gap:8px;justify-content:flex-end;}
 .arrows button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);}
 .arrows button:hover{border-color:var(--muted);}
@@ -238,7 +239,6 @@ td{padding:11px 10px;border-bottom:1px solid #222937;line-height:1.6;vertical-al
 
 <script>
 /* 플레이 영상 링크 (구글 드라이브 공유 링크, 로그인 없이 열리게) */
-const VIDEO_URL = "";
 const img = n => `${n}`;
 const fig = (s,a,c) => `<figure><img class="shot" src="${img(s)}" alt="${a}" loading="lazy">${c?`<figcaption class="cap">${c}</figcaption>`:''}</figure>`;
 const follow = (...ids) => `<div class="follow">${ids.map(id=>`<button data-go="${id}">${TOPICS[id].q}</button>`).join('')}</div>`;
@@ -256,8 +256,9 @@ const TOPICS = {
     next:['nodeverse','log','judge'] },
   nodeverse:{ nav:'NODEVERSE', ic:'◈', ct:'제작 중', q:'NODEVERSE가 뭐예요?', keys:['nodeverse','노드','노드버스','교육','게임','godot','고도','섬','미니게임'],
     say:'<b>NODEVERSE</b>는 4인 팀으로 만들고 있는 교육용 3D 게임이에요. 로봇을 조종해 섬을 탐험하며 자료구조·알고리즘·SQL을 직접 움직여 배워요. 옆으로 넘겨 보세요.',
-    card:()=>`<div class="car"><div class="track">
-      <div class="slide card"><p class="kick">OVERVIEW · Godot 4.7</p><h3>배움이 모험이 되는 섬</h3><ul><li>4인 팀 프로젝트, 진행 중</li><li>연결된 섬 월드와 실습 미니게임 23개</li><li>행동할 때마다 실행된 코드가 옆에 한 줄씩 쌓임</li><li>AI: Antigravity(Argon 모델), ChatGPT</li></ul><p style="margin-top:10px">${VIDEO_URL?`<a href="${VIDEO_URL}" target="_blank" rel="noopener">▶ 21초 실제 플레이 영상</a>`:'▶ 21초 플레이 영상: 링크 준비 중'}</p></div>
+    card:()=>`<div class="card vid"><p class="kick">▶ 21초 실제 플레이 영상</p><video src="${img('nodeverse-intro.mp4')}" poster="${img('g_world3d.jpg')}" controls muted playsinline preload="metadata"></video><p class="cap">난이도 선택 → 메인 섬 → 자료구조·알고리즘·SQL 실습 미니게임</p></div>
+      <div class="car"><div class="track">
+      <div class="slide card"><p class="kick">OVERVIEW · Godot 4.7</p><h3>배움이 모험이 되는 섬</h3><ul><li>4인 팀 프로젝트, 진행 중</li><li>연결된 섬 월드와 실습 미니게임 23개</li><li>행동할 때마다 실행된 코드가 옆에 한 줄씩 쌓임</li><li>AI: Antigravity(Argon 모델), ChatGPT</li></ul></div>
       <div class="slide card"><p class="kick">DESIGN INTENT · 왜 이렇게 만들었나</p><h3>재미는 목적이 아니라 수단</h3><p>교육용 게임의 목표는 코딩 실력이 느는 것입니다. 그래서 <b>재미 자체보다, 어떻게 하면 조금이라도 더 재밌어서 끝까지 하고 실력이 늘지</b>에 집중했습니다.</p><ul><li>개념을 읽는 대신 직접 움직여 보게 함</li><li>실습마다 미니게임과 이야기를 붙임</li><li>내 행동이 코드로 바로 보이게 함</li></ul></div>
       <div class="slide">${fig('g_st02.jpg','연결 리스트 실습','연결 리스트 · 끊어진 운송로')}</div>
       <div class="slide">${fig('g_st05.jpg','해시 테이블 실습','해시 테이블 · 이름으로 찾는 물품대장')}</div>
